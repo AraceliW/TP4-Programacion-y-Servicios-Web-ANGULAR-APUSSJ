@@ -1,0 +1,171 @@
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">Inscripcion a Cursos</h2>
+    <div class="card p-4 mb-5 shadow-sm">
+        <form #inscripcionForm="ngForm" (ngSubmit)="registrar()">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Nombre del curso</label>
+                    <input type="text" class="form-control" name="curso" [(ngModel)]="nuevaInscripcion.curso" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">DNI</label>
+                    <input type="text" class="form-control" name="dni" [(ngModel)]="nuevaInscripcion.dni" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" name="email" [(ngModel)]="nuevaInscripcion.email" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Precio Base</label>
+                    <input type="number" class="form-control" name="precio" [(ngModel)]="nuevaInscripcion.precio"
+                        (ngModelChange)="calcularTotal()" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Categoria Alumno</label>
+                    <select class="form-select" name="categoria" [(ngModel)]="nuevaInscripcion.categoriaAlumno"
+                        (ngModelChange)="calcularTotal()" required>
+                        <option value="0" disabled>Seleccionar</option>
+                        <option value="1">1 - Estudiante (35% desc.)</option>
+                        <option value="2">2 - Egresado (50% desc.)</option>
+                        <option value="3">3 - Particular (Sin desc.)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="alert alert-success mt-3" *ngIf="precioCalculado !== null">
+                El total a pagar con descuentos es: {{ precioCalculado | currency:'ARS' }}
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mt-3" [disabled]="!inscripcionForm.form.valid">
+                REGISTRAR
+            </button>
+        </form>
+    </div>
+    <hr>
+
+    <h3 class="mt-4">Registros de Inscripciones</h3>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mt-3">
+            <thead class="table-success">
+                <tr>
+                    <th>Fecha</th>
+                    <th>DNI</th>
+                    <th>Email</th>
+                    <th>Curso</th>
+                    <th>Categoria</th>
+                    <th>Precio Base</th>
+                    <th>Precio Final</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let inscripcion of listaInscripciones">
+                    <td>{{ inscripcion.fechaInscripcion | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ inscripcion.dni }}</td>
+                    <td>{{ inscripcion.email }}</td>
+                    <td>{{ inscripcion.curso }}</td>
+                    <td>
+                        <span *ngIf="inscripcion.categoriaAlumno == 1">Estudiante</span>
+                        <span *ngIf="inscripcion.categoriaAlumno == 2">Egresado</span>
+                        <span *ngIf="inscripcion.categoriaAlumno == 3">Particular</span>
+                    </td>
+                    <td>{{ inscripcion.precio | currency:'ARS' }}</td>
+                    <td class="fw-bold text-success">{{ inscripcion.precioFinal | currency:'ARS' }}</td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm me-2"
+                            (click)="seleccionarParaEdicion(inscripcion)">Editar</button>
+                        <button type="button" class="btn btn-success btn-sm"
+                            (click)="eliminar(inscripcion.id)">Eliminar</button>
+                    </td>
+                </tr>
+
+                <tr *ngIf="listaInscripciones.length === 0">
+                    <td colspan="8" class="text-center text-muted py-3">No hay inscripciones registradas aún.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card p-4 mt-4 mb-5 border-success">
+        <h4 class="text-success">Resumen de Inscripciones</h4>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <p><strong>Estudiantes:</strong> {{ totalEstudiantes }}</p>
+            </div>
+            <div class="col-md-3">
+                <p><strong>Egresados:</strong> {{ totalEgresados }}</p>
+            </div>
+            <div class="col-md-3">
+                <p><strong>Particulares:</strong> {{ totalParticulares }}</p>
+            </div>
+            <div class="col-md-3 border-start">
+                <h5 class="text-success">Total General:</h5>
+                <h4>{{ totalRecaudado | currency:'ARS' }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--
+TEORIA:
+Validación global del formulario y bloqueo del botón (#inscripcionForm y [disabled]): 
+Se creó una Variable de Referencia de Plantilla en la etiqueta form (#inscripcionForm="ngForm") 
+y se bloqueó el botón de "REGISTRAR" evaluando la propiedad booleana valid del formulario completo 
+mediante Property Binding ([disabled]="!inscripcionForm.form.valid").
+Unidad: "06-angular2-formularios validacion template.pdf".
+Tema: Formularios – Enfoque de Validación en base a plantillas.
+Sección: "MODIFICANDO EL TEMPLATE"
+Basado en el ejemplo: Se basó de manera exacta en el ejemplo propuesto en el apunte que declara 
+<form #peliculaForm="ngForm"> y deshabilita el botón con <button [disabled]="!peliculaForm.form.valid" ...>
+
+Binding bidireccional y atributos obligatorios ([(ngModel)], name, required): Se implementó el two-way 
+data binding en los campos <input> y <select> usando [(ngModel)], asignando obligatoriamente el atributo 
+name a cada campo (necesario para la validación por plantilla) y estableciendo el atributo HTML5 required.
+Unidad: "06-angular2-formularios validacion template.pdf".
+Tema: Formularios – Enfoque de Validación en base a plantillas.
+Sección: "TRAJANDO CON EL TEMPLATE" y "MODIFICANDO EL TEMPLATE"
+Basado en el ejemplo: Basado en el esquema de los inputs de ejemplo del material: 
+<input type="text" ... required ... [(ngModel)]="pelicula.titulo" name="titulo"...>
+
+
+Recálculo dinámico usando el evento (ngModelChange): Se utilizó el evento (ngModelChange)="calcularTotal()" 
+en los campos de precio y categoría para detectar el momento exacto en el que cambia el valor del modelo e 
+invocar al controlador para recalcular el precio final.
+Unidad: "manual-de-angular.pdf".
+Tema: Binding en Angular al detalle.
+Sección: "Directiva ngModel" -> "Evento ngModelChange"
+Basado en el ejemplo: Basado en la sintaxis mostrada para la vista del componente CuadradoComponent: 
+<input type="number" [ngModel]="lado" (ngModelChange)="cambiaLado($event)">
+
+Iteración de listas y manipulación del DOM (*ngFor y *ngIf): Se empleó la directiva 
+estructural *ngFor para replicar las filas (<tr>) leyendo el arreglo de inscripciones. 
+Además, se utilizó *ngIf evaluar expresiones booleanas y añadir o quitar elementos del 
+DOM (por ejemplo, para traducir el número de categoría a texto o mostrar el mensaje de tabla vacía).
+Unidad: "manual-de-angular.pdf" y "06-angular2-formularios validacion template.pdf".
+Temas / Secciones: "Directiva ngFor de Angular 2" y "Uso de *ngIf para mostrar o no mensaje de error"
+Basado en el ejemplo: Basado en el esquema iterativo <p *ngFor="let pregunta of preguntas">
+y el despliegue condicional usado en las validaciones <div *ngIf="titulo.errors?.[‘required’]">
+
+Transformación de la salida con Pipes (date y currency): Se aplicaron Pipes nativos de Angular 
+para el formateo de los datos en la tabla y en el resumen. Se dio formato exacto a la fecha con 
+date:'dd/MM/yyyy' y se formatearon los precios como moneda local con currency:'ARS'.
+Unidad: "07-angular2-pipes.pdf".
+Tema: Pipes en Angular.
+Secciones: "PIPES PREDEFINIDOS EN ANGULAR" -> "CurrencyPipe" y "DatePipe"
+Basado en el ejemplo: Se basó de manera directa en el uso del código ISO indicado en la sintaxis de CurrencyPipe
+y en el ejemplo exacto mostrado para fechas en una tabla: <td>{{item.fecha | date: 'dd/MM/yyyy'}}</td>
+
+
+Optimización de variables en la Interpolación ({{ }}): Se imprimieron los resultados del resumen mediante 
+interpolación utilizando variables simples ya calculadas ({{ totalEstudiantes }}, {{ totalRecaudado }}) 
+en lugar de invocar funciones iterativas directamente dentro de las llaves.
+Unidad: "manual-de-angular.pdf".
+Tema: Binding en Angular al detalle -> Interpolación {{}} en Angular al detalle.
+Sección: "Expresiones, entre las dobles llaves"
+Basado en la teoría y advertencia del material: Se basó directamente en la advertencia del material 
+que indica que llamar un método complejo como {{ metodoComponente() }} "se volverá a ejecutar cada vez 
+que el estado del componente cambie" provocando que "la aplicación caiga en rendimiento y afectando negativamente 
+a la experiencia de usuario"
+-->
