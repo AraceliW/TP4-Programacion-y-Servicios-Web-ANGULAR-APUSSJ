@@ -75,11 +75,16 @@ export class Punto3{
       if(card1.imagen === card2.imagen){
         card1.emparejada = true;
         card2.emparejada = true;
+
+        if (this.cartas.every(c => c.emparejada)) {
+          this.mostrarFinDeJuego("¡Felicidades, has ganado!");
+        }
+
       } else {
         this.intentos--;
   
         if(this.intentos === 0){
-          this.reiniciarJuego();
+          this.mostrarFinDeJuego("Fin del juego, te quedaste sin intentos");
         }
       }
       setTimeout(() => {
@@ -96,4 +101,8 @@ export class Punto3{
     this.intentos = 5
   }
 
+  mostrarFinDeJuego(mensaje:string){
+    alert(mensaje);
+    this.reiniciarJuego();
+  }
 }

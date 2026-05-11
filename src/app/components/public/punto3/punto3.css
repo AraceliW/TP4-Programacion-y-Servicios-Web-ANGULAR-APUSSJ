@@ -1,6 +1,11 @@
 .contenedor {
-    background: greenyellow;
+    min-height: 610px;
 }
-.carta{
-    height: 100px;
+.carta {
+    aspect-ratio: 1 / 1; /* Esto las hace cuadradas automáticamente */
+    cursor: pointer;
+    transition: transform 0.2s, background-color 0.3s;
+    font-size: 2rem;
+    border: 2px solid #198754;
+    user-select: none;
 }

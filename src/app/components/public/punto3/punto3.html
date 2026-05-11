@@ -1,17 +1,23 @@
-<div class="container mt-4 rounded-3 px-3 py-2">
-    <h1>Juego de memoria</h1>
-    <div class="row contenedor mb-5">
+<div class="container mt-4 pb-5 contenedor">
+  <div class="row justify-content-center">
+    
+    <div class="col-12 col-md-8 col-lg-6">
+      
+      <h1 class="text-center mb-4">Juego de memoria</h1>
+
+      <div class="row row-cols-4 g-3 mb-5">
         @for(carta of cartas; track carta.id) {
-            <div 
-                class="carta col-3 card d-flex justify-content-center align-items-center"
-                (click)="voltearCarta(carta)" 
-                [class]="carta.volteada || carta.emparejada ? 'bg-success' : ''"
-                [style.cursor]="jugable ? 'pointer' : 'not-allowed'"
-                >
-                {{carta.volteada || carta.emparejada ? carta.imagen : '?'}}
+          <div class="col">
+            <div class="carta card d-flex justify-content-center align-items-center h-100" 
+                 (click)="voltearCarta(carta)"
+                 [class]="carta.volteada || carta.emparejada ? 'bg-success' : ''"
+                 [style.cursor]="jugable ? 'pointer' : 'not-allowed'"
+            >
+              {{carta.volteada || carta.emparejada ? carta.imagen : '?'}}
             </div>
+          </div>
         }
-    </div>
+      </div>
 
     <div class="row g-2">
         <button (click)="iniciarJuego()" class="p-2 btn btn-success">MEZCLAR</button>
