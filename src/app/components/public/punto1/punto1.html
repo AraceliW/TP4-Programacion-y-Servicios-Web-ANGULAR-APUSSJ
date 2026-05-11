@@ -1,1 +1,36 @@
-<p>punto1 works!</p>
+<div class="container mt-4">
+  <div class="card mx-auto shadow" style="max-width: 650px; border-radius: 15px; overflow: hidden">
+    <div style="height: 350px; overflow: hidden">
+      <img
+        [src]="eventos[indiceActual].img"
+        class="w-100 h-100"
+        [alt]="eventos[indiceActual].nombre"
+        style="object-fit: cover; transition: all 0.5s ease"
+      />
+    </div>
+
+    <div class="card-body bg-light" style="min-height: 250px">
+      <h2 class="h4 card-title text-dark fw-bold mb-3 border-bottom pb-2">
+        {{ eventos[indiceActual].nombre }}
+      </h2>
+
+      <p class="card-text text-muted" style="text-align: justify; font-size: 0.95rem">
+        {{ eventos[indiceActual].descripcion }}
+      </p>
+    </div>
+
+    <div
+      class="card-footer d-flex justify-content-between align-items-center bg-white border-top-0 pb-3"
+    >
+      <button class="btn btn-outline-primary rounded-pill px-4" (click)="anterior()">
+        &larr; Anterior
+      </button>
+
+      <span class="fw-bold text-primary"> {{ indiceActual + 1 }} / {{ eventos.length }} </span>
+
+      <button class="btn btn-primary rounded-pill px-4" (click)="siguiente()">
+        Siguiente &rarr;
+      </button>
+    </div>
+  </div>
+</div>
