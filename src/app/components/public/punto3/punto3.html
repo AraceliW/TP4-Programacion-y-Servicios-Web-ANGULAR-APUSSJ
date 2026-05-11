@@ -1,1 +1,21 @@
-<p>punto3 works!</p>
+<div class="container mt-4 rounded-3 px-3 py-2">
+    <h1>Juego de memoria</h1>
+    <div class="row contenedor mb-5">
+        @for(carta of cartas; track carta.id) {
+            <div 
+                class="carta col-3 card d-flex justify-content-center align-items-center"
+                (click)="voltearCarta(carta)" 
+                [class]="carta.volteada || carta.emparejada ? 'bg-success' : ''"
+                [style.cursor]="jugable ? 'pointer' : 'not-allowed'"
+                >
+                {{carta.volteada || carta.emparejada ? carta.imagen : '?'}}
+            </div>
+        }
+    </div>
+
+    <div class="row g-2">
+        <button (click)="iniciarJuego()" class="p-2 btn btn-success">MEZCLAR</button>
+        <button (click)="reiniciarJuego()" class="p-2 btn btn-warning">REINICIAR</button>
+        <button (click)="activarSeleccion()" class="p-2 btn btn-info"> {{intentos}}| {{jugable ? 'ELIGIENDO CARTAS...': 'SELECCIONAR 2 CARTAS'}}</button>
+    </div>
+</div>
